@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Redwood RunMyJobs proof of concept plan</title>
+<style>
+:root {
+  --surface: #ffffff;
+  --page: #f6f7f9;
+  --text: #1d2330;
+  --muted: #5b6372;
+  --accent: #1f4e79;
+  --accent-soft: #e8f0f8;
+  --border: #d9dee7;
+  --bar: #8ab8e6;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #1a1f2a;
+    --page: #12151c;
+    --text: #e6e9f0;
+    --muted: #9aa3b5;
+    --accent: #8ab8e6;
+    --accent-soft: #223246;
+    --border: #2e3645;
+    --bar: #3d6a9c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --surface: #1a1f2a;
+  --page: #12151c;
+  --text: #e6e9f0;
+  --muted: #9aa3b5;
+  --accent: #8ab8e6;
+  --accent-soft: #223246;
+  --border: #2e3645;
+  --bar: #3d6a9c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--page);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+main { max-width: 900px; margin: 0 auto; padding: 24px 16px 56px; }
+header { background: var(--surface); border: 1px solid var(--border); border-left: 6px solid var(--accent); border-radius: 10px; padding: 20px 22px; margin-bottom: 20px; }
+h1 { margin: 0 0 6px; font-size: 1.5rem; font-weight: 500; color: var(--accent); }
+h2 { margin: 0 0 12px; font-size: 1.2rem; font-weight: 500; color: var(--accent); }
+header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 18px; }
+p.note { font-size: 0.88rem; color: var(--muted); margin: 10px 0 0; }
+
+/* Gantt */
+.gantt { overflow-x: auto; }
+.gantt-grid { display: grid; grid-template-columns: minmax(150px, 1.4fr) repeat(6, minmax(48px, 1fr)); gap: 6px 0; font-size: 0.85rem; align-items: center; min-width: 520px; }
+.gantt-head { color: var(--muted); text-align: center; font-weight: 500; }
+.gantt-label { padding-right: 8px; }
+.gantt-cell { height: 22px; border-radius: 0; }
+.gantt-bar { background: var(--bar); border-radius: 4px; height: 22px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+tr:last-child td { border-bottom: none; }
+
+/* Questions */
+ol.questions { padding-left: 22px; margin: 0; }
+ol.questions li { margin-bottom: 10px; }
+
+/* Checklist */
+.check-list { list-style: none; padding: 0; margin: 0; }
+.check-list li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+.check-list input { margin-top: 4px; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--accent); }
+.check-list label { cursor: pointer; }
+.progress { font-size: 0.9rem; color: var(--muted); margin: 0 0 12px; }
+.decision { margin-top: 12px; padding: 12px 14px; border-radius: 8px; background: var(--accent-soft); font-size: 0.95rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Redwood RunMyJobs proof of concept</h1>
+    <p>Six-week plan to test RunMyJobs on the Track A order-to-settlement flow, with questions for Redwood and a week 6 go/no-go checklist.</p>
+  </header>
+
+  <section>
+    <h2>1. Six-week timeline</h2>
+    <div class="gantt">
+      <div class="gantt-grid" id="gantt"></div>
+    </div>
+    <p class="note">Week 6 ends with the go/no-go decision, which depends on the Delper investment terms being confirmed.</p>
+  </section>
+
+  <section>
+    <h2>2. Task list</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task</th><th>Owner</th><th>Weeks</th></tr></thead>
+        <tbody>
+          <tr><td>Select process and requirements</td><td>Process owner</td><td>1</td></tr>
+          <tr><td>Sandbox and SAP connection</td><td>Integration engineer</td><td>1–2</td></tr>
+          <tr><td>Map flow in SAP BTP and Signavio</td><td>Integration engineer</td><td>2</td></tr>
+          <tr><td>Build Track A flow in RunMyJobs</td><td>Integration engineer</td><td>3–4</td></tr>
+          <tr><td>Failure, alert and audit tests</td><td>Process owner</td><td>3–4</td></tr>
+          <tr><td>RBAC and AI approval tests</td><td>Integration engineer</td><td>4</td></tr>
+          <tr><td>Volume simulation</td><td>Integration engineer</td><td>5–6</td></tr>
+          <tr><td>Cost and renewal analysis</td><td>Finance representative</td><td>5</td></tr>
+          <tr><td>Results review and go/no-go</td><td>Process owner, finance</td><td>6</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Questions for Redwood</h2>
+    <ol class="questions">
+      <li><strong>Sandbox:</strong> Can you provide a trial environment within the first week, and who is the named engineer for the proof of concept?</li>
+      <li><strong>SAP integration:</strong> Which SAP versions and connectors do you support, and how does RunMyJobs integrate with SAP BTP and Signavio?</li>
+      <li><strong>Agent governance:</strong> How do your MCP server and A2A plug-in enforce role-based access, audit trails and human approval before a state-changing action? Can you demonstrate this on our Track A flow?</li>
+      <li><strong>Pricing:</strong> What is the licence quote for our expected volume? What renewal price cap can you commit to in writing?</li>
+      <li><strong>Exit and data:</strong> What are the data export formats and timelines on exit? What happens to our workflow definitions if we leave?</li>
+      <li><strong>Disaster recovery:</strong> What are your recovery time and recovery point objectives under the single-tenant SaaS option?</li>
+      <li><strong>Mainframe:</strong> Since the summary includes industrial and legacy systems, what is your approach for on-premises job execution through a gateway?</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>4. Week 6 go/no-go checklist</h2>
+    <p class="progress" id="progress"></p>
+    <ul class="check-list" id="checklist">
+      <li><input type="checkbox" id="c1"><label for="c1">All pass/fail tests passed, including settlement within the 14-day window.</label></li>
+      <li><input type="checkbox" id="c2"><label for="c2">Every failure triggered an alert and a defined recovery action.</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3">Audit logs are complete for every action.</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4">The SAP data exchange ran correctly on the sample dataset.</label></li>
+      <li><input type="checkbox" id="c5"><label for="c5">Access is restricted by role, and AI agents cannot run state-changing actions without approval.</label></li>
+      <li><input type="checkbox" id="c6"><label for="c6">The licence quote and renewal cap are acceptable and fit the budget.</label></li>
+      <li><input type="checkbox" id="c7"><label for="c7">Build cost in person-days is compared with building the same flow directly in SAP BTP.</label></li>
+      <li><input type="checkbox" id="c8"><label for="c8">Exit and data-export terms are written into the proposed contract.</label></li>
+      <li><input type="checkbox" id="c9"><label for="c9">Delper investment terms are confirmed in writing.</label></li>
+      <li><input type="checkbox" id="c10"><label for="c10">Financing approvals and the guarantee terms in the summary are verified.</label></li>
+    </ul>
+    <div class="decision" id="decision"></div>
+  </section>
+</main>
+<script>
+(function () {
+  var weeks = 6;
+  var tasks = [
+    { name: "Select process and requirements", start: 1, end: 1 },
+    { name: "Sandbox and SAP connection", start: 1, end: 2 },
+    { name: "Map flow in SAP BTP and Signavio", start: 2, end: 2 },
+    { name: "Build Track A flow in RunMyJobs", start: 3, end: 4 },
+    { name: "Failure, alert and audit tests", start: 3, end: 4 },
+    { name: "RBAC and AI approval tests", start: 4, end: 4 },
+    { name: "Volume simulation", start: 5, end: 6 },
+    { name: "Cost and renewal analysis", start: 5, end: 5 },
+    { name: "Results review and go/no-go", start: 6, end: 6 }
+  ];
+
+  var g = document.getElementById("gantt");
+  var html = '<div class="gantt-head"></div>';
+  for (var w = 1; w <= weeks; w++) html += '<div class="gantt-head">W' + w + '</div>';
+  tasks.forEach(function (t) {
+    html += '<div class="gantt-label">' + t.name + '</div>';
+    for (var w = 1; w <= weeks; w++) {
+      if (w === t.start) {
+        var span = t.end - t.start + 1;
+        html += '<div class="gantt-cell" style="grid-column:' + (w + 1) + ' / span ' + span + '"><div class="gantt-bar"></div></div>';
+        w = t.end;
+      } else if (w < t.start || w > t.end) {
+        // empty cell only drawn where no bar starts; handled by grid auto placement
+      }
+    }
+  });
+  g.innerHTML = html;
+
+  var boxes = document.querySelectorAll("#checklist input");
+  var progress = document.getElementById("progress");
+  var decision = document.getElementById("decision");
+  function update() {
+    var done = 0;
+    boxes.forEach(function (b) { if (b.checked) done++; });
+    progress.textContent = done + " of " + boxes.length + " criteria met";
+    if (done === boxes.length) {
+      decision.textContent = "All criteria met. Proceed to contract, subject to the investment terms in writing.";
+    } else {
+      decision.textContent = "No-go until every criterion is met.";
+    }
+  }
+  boxes.forEach(function (b) { b.addEventListener("change", update); });
+  update();
+})();
+</script>
+</body>
+</html>
